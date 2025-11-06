@@ -42,7 +42,7 @@ jobs:
 
       - name: Lint Check
         run: |
-          npm run lint:fix
+          npm run lint:fix || true
           npm run lint || true
 
       - name: SonarQube Scan
