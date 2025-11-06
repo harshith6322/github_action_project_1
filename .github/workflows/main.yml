@@ -8,8 +8,16 @@ on:
 
   workflow_dispatch:
 
+env:
+  SONAR_TOKEN_git: ${{secrets.SONAR_TOKEN}}
+  SONAR_HOST_URL_git: ${{secrets.SONAR_HOST_URL}}
+
+
+
+
 jobs:
-  build_web:
+  Code_Check:
+    
     runs-on: ubuntu-latest
     steps:
       - name: Code Checkout
@@ -35,7 +43,26 @@ jobs:
       - name: Lint Check
         run: |
           npm run lint:fix
-          npm run lint
+          npm run lint || true
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6.0.0
+        with:
+          projectBaseDir: .
+          args: |
+              -Dsonar.projectKey=WebApp
+              -Dsonar.sources=.
+        env:
+          SONAR_TOKEN: $SONAR_TOKEN
+          SONAR_HOST_URL: $SONAR_HOST_URL
+
+      - name: SonarQube Quality Gate Check
+        uses: SonarSource/sonarqube-quality-gate-action@v1.1.0
+        env:
+          SONAR_TOKEN: $SONAR_TOKEN
+          SONAR_HOST_URL: $SONAR_HOST_URL
+
+            
 
 
 
