@@ -1,0 +1,44 @@
+name: Porduction Grade CI For ReactApp
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  build_web:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v5.0.0
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v6.0.0
+        with:
+          node-version: 22
+
+      - name: Trivy Fs
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: fs
+          scan-ref: "./"
+          output: 'trivy-results.sarif'
+
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2.3.9
+        with: 
+          fetch-depth: 0
+
+
+
+
+
+
+      
+          
+    
+
+    
